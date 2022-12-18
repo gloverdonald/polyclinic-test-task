@@ -1,0 +1,447 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table
+      author: Mikhail
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: varchar(255)
+              - column:
+                  name: hash_password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: avatar_id
+                  type: uuid
+              - column:
+                  name: confirm_code_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: verified
+                  type: boolean
+        - createTable:
+            tableName: doctor
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: education
+                  type: text
+              - column:
+                  name: experience
+                  type: integer
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: account_id
+                  type: uuid
+        - addForeignKeyConstraint:
+            baseTableName: doctor
+            baseColumnNames: account_id
+            constraintName: doctor_account_fk
+            referencedTableName: account
+            referencedColumnNames: id
+        - createTable:
+            tableName: refresh_token
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: token
+                  type: varchar(255)
+              - column:
+                  name: expiry_date
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: account_id
+                  type: uuid
+              - addForeignKeyConstraint:
+                  baseTableName: refresh_token
+                  baseColumnNames: account_id
+                  constraintName: refresh_token_account_fk
+                  referencedTableName: account
+                  referencedColumnNames: id
+        - createTable:
+            tableName: medical_category
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+        - createTable:
+            tableName: medical_care
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: integer
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: medical_category_id
+                  type: uuid
+              - addForeignKeyConstraint:
+                  baseTableName: medical_care
+                  baseColumnNames: medical_category_id
+                  constraintName: medical_care_category_fk
+                  referencedTableName: medical_category
+                  referencedColumnNames: id
+        - createTable:
+            tableName: doctor_medical_cares
+            columns:
+              - column:
+                  name: doctor_id
+                  type: uuid
+              - column:
+                  name: medical_care_id
+                  type: uuid
+        - addForeignKeyConstraint:
+            baseTableName: doctor_medical_cares
+            baseColumnNames: doctor_id
+            referencedTableName: doctor
+            referencedColumnNames: id
+            constraintName: doctor_medical_cares_fk
+        - addForeignKeyConstraint:
+            baseTableName: doctor_medical_cares
+            baseColumnNames: medical_care_id
+            referencedTableName: medical_care
+            referencedColumnNames: id
+            constraintName: medical_cares_doctor_fk
+        - createTable:
+            tableName: administrator
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: account_id
+                  type: uuid
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+        - addForeignKeyConstraint:
+            baseTableName: administrator
+            baseColumnNames: account_id
+            constraintName: administrator_account_fk
+            referencedTableName: account
+            referencedColumnNames: id
+        - createTable:
+            tableName: patient
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: account_id
+                  type: uuid
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+        - addForeignKeyConstraint:
+            baseTableName: patient
+            baseColumnNames: account_id
+            constraintName: patient_account_fk
+            referencedTableName: account
+            referencedColumnNames: id
+        - createTable:
+            tableName: account_file
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: file_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mime_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: original_file_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: size
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: avatar_id
+            referencedTableName: account_file
+            referencedColumnNames: id
+            constraintName: account_avatar_fk
+        - createTable:
+            tableName: confirm_code
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: code
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: confirm_code_id
+            referencedTableName: confirm_code
+            referencedColumnNames: id
+            constraintName: account_confirm_code_fk
+        - createTable:
+            tableName: appointment
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: commentary
+                  type: text
+              - column:
+                  name: anamnesis
+                  type: text
+              - column:
+                  name: start_time
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: medical_care_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: doctor_id
+                  type: uuid
+              - column:
+                  name: patient_id
+                  type: uuid
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+        - addUniqueConstraint:
+            tableName: doctor_medical_cares
+            columnNames: doctor_id, medical_care_id
+        - addForeignKeyConstraint:
+            baseTableName: appointment
+            baseColumnNames: medical_care_id
+            referencedTableName: medical_care
+            referencedColumnNames: id
+            constraintName: appointment_medical_care_fk
+        - addForeignKeyConstraint:
+            baseTableName: appointment
+            baseColumnNames: doctor_id
+            referencedTableName: doctor
+            referencedColumnNames: id
+            constraintName: appointment_doctor_fk
+        - addForeignKeyConstraint:
+            baseTableName: appointment
+            baseColumnNames: patient_id
+            referencedTableName: patient
+            referencedColumnNames: id
+            constraintName: appointment_patient_fk
+        - createTable:
+            tableName: link
+            columns:
+              - column:
+                  name: appointment_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: content
+                  type: text

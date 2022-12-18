@@ -1,0 +1,59 @@
+server:
+  port: ${APP_PORT}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${APP_DB_HOST}:${APP_DB_PORT}/${APP_DB_NAME}
+    username: ${APP_DB_USER}
+    password: ${APP_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:changelog/database_changelog_test.yaml
+  data:
+    mongodb:
+      host: ${MONGO_HOST}
+      port: ${MONGO_PORT}
+      database: ${MONGO_NAME}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 256MB
+      max-request-size: 256MB
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+
+expiration:
+  refresh: 86400000
+  access: 500000
+
+secret: ${APP_SECRET}
+email:
+  confirm:
+    url: http://${APP_ADDRESS}:${APP_PORT}/api/v1/auth/confirm/
+
+sms:
+  email: ${APP_SMS_MAIL}
+  api-key: ${APP_SMS_KEY}
+  sms-text: ${APP_SMS_TEXT}
+  sms-sign: ${APP_SMS_SIGN}
+  enabled: true
+
+

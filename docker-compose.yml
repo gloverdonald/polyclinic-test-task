@@ -1,0 +1,36 @@
+version: '3.8'
+networks:
+  my_network:
+    name: my_network
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: polyc_cont
+    image: "application_image"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: email
+      SPRING_DATABASE_URL: jdbc:postgresql://postgres:5432/polyclinic
+      SPRING_DATABASE_USER: postgres
+      SPRING_DATABASE_PASSWORD: qwerty123
+      SMS_AERO_EMAIL: somemail@mail.com
+      SMS_AERO_PAS: 62fzqsomepasTdyU
+      SMS_AERO_API_KEY: y2RNoP7gsomekeyO1PLc9cc
+    ports:
+      - "80:80"
+    networks:
+      - my_network
+  postgres:
+    container_name: polyc_cont_postgres
+    image: "postgres:11-alpine"
+    ports:
+      - "5433:5433"
+    networks:
+      - my_network
+    environment:
+      - POSTGRES_DB=polyclinic
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty123
